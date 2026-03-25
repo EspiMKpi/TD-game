@@ -25,6 +25,7 @@ public class EnemyMovement : MonoBehaviour
             {
                 EnemySpawner.onEnemyDestroy.Invoke();
                 Destroy(gameObject);
+                HealthManager.main.TakeDamage(20f);
                 return;
             }
             else
