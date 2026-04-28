@@ -8,6 +8,9 @@ using UnityEngine.EventSystems;
 public class EnemySpawner : MonoBehaviour
 {
 
+    public static EnemySpawner main;
+
+
     [Header("References")]
     [SerializeField] private GameObject[] enemyPrefabs;
 
@@ -28,6 +31,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
+        main = this;
         onEnemyDestroy.AddListener(EnemyDestroyed);
     }
 
@@ -60,6 +64,11 @@ public class EnemySpawner : MonoBehaviour
     private void EnemyDestroyed()
     {
         enemiesAlive--;
+    }
+
+    public static int EnemiesAlive
+    {
+        get { return main != null ? main.enemiesAlive : 0; }
     }
 
     private IEnumerator StartWave()
