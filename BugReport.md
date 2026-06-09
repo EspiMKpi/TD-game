@@ -68,3 +68,21 @@ Mức độ: 🔴 cao · 🟡 trung bình · 🟢 thấp · ⚪ thông tin/chưa
 - `Base`: máu kẹp tại 0 (không âm); `onBaseDestroyed` bắn đúng 1 lần; takeDamage sau khi phá bị bỏ qua.
 - `Settings.saveSettings`: trả `true` + lưu đủ field.
 - `Level.saveResult`: chỉ cập nhật khi điểm/sao cao hơn.
+
+## 5. Nhật ký kiểm thử theo phiên
+
+### 2026-06-09 — Wiring scene + luồng menu (GĐ6) + tích hợp
+- Wiring `_Recovery/0 (1)`: GameSession/Base/HUD/Result — **0 ref thiếu**; MainMenu: 5 view + EventSystem — **0 ref thiếu**.
+- Play-test live: Base bị phá → `GameSession.status = Lost` (end-to-end).
+- HUD cập nhật wave/score/máu; Result hiện "THẤT BẠI" khi thua.
+- Luồng menu: Boot → MainMenu (tự chuyển); Play → Chọn màn → Màn 1 → Bắt đầu → **scene gameplay nạp, khởi tạo OK**.
+- **Bug phát hiện & sửa:** `LevelDetailView`/`ConfirmExitView` tự gọi `panel.SetActive(false)` trong `Start` (view nằm trên chính panel → Start chạy sau `Show` rồi tắt nhầm). Đã bỏ dòng tự tắt; panel lưu inactive sẵn trong scene.
+
+### 2026-06-09 — Giai đoạn 7 (Lưu trữ & tiến trình)
+Kiểm động qua MCP + test chính thức (`Assets/Tests/EditMode/SaveTests.cs`). **Tất cả PASS, không phát hiện bug mới.**
+- `SaveSystem` (PlayerPrefs): round-trip Level (unlocked/score/stars) + Settings — đúng.
+- `Level.saveResult` → lưu thật; chỉ ghi đè khi điểm/sao cao hơn (kiểm qua nhiều instance).
+- `Base.Initialize(maxHP)`: đặt đúng maxHP + currentHP.
+- Tích hợp play-mode: chọn Level_01 (res=150, baseHP=25) → vào gameplay → **currency=150, Base.MaxHP=25** (ApplyLevel ghi đè default 100/20 nhờ `[DefaultExecutionOrder(100)]`).
+- Thắng (đầy máu) → **stars=3**, `saveResult` lưu bestScore/bestStars đọc lại đúng.
+- Console: **0 error / 0 warning**. (Đã dọn save data test `lvl_1`.)

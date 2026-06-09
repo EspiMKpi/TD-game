@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Quantall.Runtime::Level
   levelId: 1
   waveCount: 10
-  initialResources: 100
-  baseMaxHP: 20
+  initialResources: 150
+  baseMaxHP: 25
   isUnlocked: 1
   bestScore: 0
   bestStars: 0

@@ -87,6 +87,12 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // Đặt tổng số wave theo Level đã chọn (Giai đoạn 7).
+    public void SetTotalWaves(int t)
+    {
+        if (t > 0) totalWaves = t;
+    }
+
     // UC8 — chỉ cho gọi wave kế sớm khi đã sinh >= 80% wave hiện tại.
     public bool CanCallNextWaveEarly()
     {

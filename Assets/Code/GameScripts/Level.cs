@@ -31,6 +31,12 @@ public class Level : ScriptableObject
     {
         if (score > bestScore) bestScore = score;
         if (stars > bestStars) bestStars = stars;
-        // TODO Giai đoạn 7: gọi SaveSystem.Save().
+        SaveSystem.SaveLevel(this);
+    }
+
+    // Đọc tiến trình đã lưu vào asset này (gọi khi mở LevelSelect/Detail).
+    public void LoadProgress()
+    {
+        SaveSystem.LoadLevel(this);
     }
 }

@@ -9,9 +9,14 @@ using UnityEngine.Events;
 // tham chiếu Level_Manager.main đang dùng ở Plot / Health / Menu / EnemyMovement.
 // GameSession ủy quyền qua các helper bên dưới; sẽ migrate dần các lời gọi trực
 // tiếp sang GameSession ở những increment sau.
+// DefaultExecutionOrder để Awake/Start chạy SAU Level_Manager/Base/EnemySpawner (order 0),
+// đảm bảo ApplyLevel ghi đè được giá trị mặc định của chúng.
+[DefaultExecutionOrder(100)]
 public class GameSession : MonoBehaviour
 {
     public static GameSession Instance { get; private set; }
+
+    private Level currentLevel;
 
     [Header("References")]
     public Base theBase;                 // hợp thành 1-1 (tự tìm qua Base.main nếu để trống)
@@ -49,6 +54,9 @@ public class GameSession : MonoBehaviour
         // Base.main đã được gán trong Base.Awake (chạy trước Start), nên không cần FindObjectOfType.
         if (theBase == null) theBase = Base.main;
 
+        // Áp Level đã chọn từ menu (Giai đoạn 7). Null nếu chơi thẳng scene gameplay -> dùng mặc định.
+        ApplyLevel(GameFlow.SelectedLevel);
+
         if (theBase != null)
         {
             theBase.onBaseDestroyed.AddListener(OnBaseDestroyed);
@@ -57,6 +65,25 @@ public class GameSession : MonoBehaviour
         {
             Debug.LogWarning("GameSession: chưa có Base trong scene — điều kiện thua đang bị tắt.");
         }
+    }
+
+    private void ApplyLevel(Level lvl)
+    {
+        currentLevel = lvl;
+        if (lvl == null) return;
+        if (Level_Manager.main != null) Level_Manager.main.currency = lvl.initialResources;
+        if (theBase != null) theBase.Initialize(lvl.baseMaxHP);
+        if (EnemySpawner.main != null) EnemySpawner.main.SetTotalWaves(lvl.waveCount);
+    }
+
+    // Số sao theo tỉ lệ máu căn cứ còn lại khi thắng.
+    private int ComputeStars()
+    {
+        if (theBase == null || theBase.MaxHP <= 0) return 1;
+        float r = (float)theBase.CurrentHP / theBase.MaxHP;
+        if (r >= 0.99f) return 3;
+        if (r >= 0.5f) return 2;
+        return 1;
     }
 
     // UC11 — thua khi căn cứ bị phá.
@@ -71,9 +98,10 @@ public class GameSession : MonoBehaviour
     public void OnAllWavesCleared()
     {
         if (status != GameStatus.Playing) return;
+        stars = ComputeStars();
         SetStatus(GameStatus.Won);
-        Debug.Log("GameSession: status = Won");
-        // TODO Giai đoạn 6: mở ResultView + lưu kết quả (Level.saveResult).
+        Debug.Log("GameSession: status = Won (stars=" + stars + ")");
+        if (currentLevel != null) currentLevel.saveResult(score, stars);
     }
 
     public void SetCurrentWaveIndex(int index)

@@ -31,6 +31,15 @@ public class Base : MonoBehaviour
         currentHP = maxHP;
     }
 
+    // Khởi tạo lại theo Level đã chọn (Giai đoạn 7).
+    public void Initialize(int newMaxHP)
+    {
+        maxHP = newMaxHP;
+        currentHP = maxHP;
+        isDestroyed = false;
+        onHealthChanged.Invoke();
+    }
+
     // Tên phương thức giữ đúng thiết kế: takeDamage(damageAmount).
     public void takeDamage(int damageAmount)
     {

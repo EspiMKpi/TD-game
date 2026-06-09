@@ -34,6 +34,7 @@ public class LevelDetailView : MonoBehaviour
         GameFlow.SelectedLevel = level;
         if (panel != null) panel.SetActive(true);
         if (level == null) return;
+        level.LoadProgress();   // đọc bestScore/bestStars đã lưu
         if (nameText != null) nameText.text = "Màn " + level.levelId;
         if (bestScoreText != null) bestScoreText.text = "Best: " + level.bestScore;
         if (bestStarsText != null) bestStarsText.text = "Sao: " + level.bestStars;
