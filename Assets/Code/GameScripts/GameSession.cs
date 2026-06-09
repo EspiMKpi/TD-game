@@ -73,7 +73,7 @@ public class GameSession : MonoBehaviour
         if (lvl == null) return;
         if (Level_Manager.main != null) Level_Manager.main.currency = lvl.initialResources;
         if (theBase != null) theBase.Initialize(lvl.baseMaxHP);
-        if (EnemySpawner.main != null) EnemySpawner.main.SetTotalWaves(lvl.waveCount);
+        if (EnemySpawner.main != null) EnemySpawner.main.SetLevel(lvl);
     }
 
     // Số sao theo tỉ lệ máu căn cứ còn lại khi thắng.
@@ -101,7 +101,11 @@ public class GameSession : MonoBehaviour
         stars = ComputeStars();
         SetStatus(GameStatus.Won);
         Debug.Log("GameSession: status = Won (stars=" + stars + ")");
-        if (currentLevel != null) currentLevel.saveResult(score, stars);
+        if (currentLevel != null)
+        {
+            currentLevel.saveResult(score, stars);
+            currentLevel.unlockNext();   // Giai đoạn 7: mở khóa màn kế khi thắng
+        }
     }
 
     public void SetCurrentWaveIndex(int index)

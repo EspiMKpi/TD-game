@@ -46,6 +46,7 @@ public class SettingsView : MonoBehaviour
             OptionText(qualityDropdown, settings.graphicsQuality),
             OptionText(languageDropdown, settings.language),
             OptionText(displayDropdown, settings.displayMode));
+        SaveSystem.SaveSettings(settings);   // Giai đoạn 7: ghi tiến trình cài đặt xuống PlayerPrefs
     }
 
     private void OnBack()

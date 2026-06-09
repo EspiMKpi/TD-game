@@ -11,6 +11,7 @@ public class ResultView : MonoBehaviour
     [SerializeField] private GameObject panel;            // panel kết quả (ẩn lúc đầu)
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI starsText;   // tùy chọn: nếu null thì ghép sao vào scoreText
     [SerializeField] private Button restartButton;
     [SerializeField] private Button menuButton;
 
@@ -39,7 +40,11 @@ public class ResultView : MonoBehaviour
 
         if (panel != null) panel.SetActive(true);
         if (titleText != null) titleText.text = gs.status == GameStatus.Won ? "CHIẾN THẮNG" : "THẤT BẠI";
-        if (scoreText != null) scoreText.text = "Điểm: " + gs.Score;
+
+        string scoreLine = "Điểm: " + gs.Score;
+        if (starsText != null) starsText.text = "Sao: " + gs.Stars + "/3";
+        else scoreLine += "   Sao: " + gs.Stars + "/3";
+        if (scoreText != null) scoreText.text = scoreLine;
 
         Time.timeScale = 0f;   // dừng game khi hiện kết quả
     }

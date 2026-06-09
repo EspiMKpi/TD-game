@@ -21,6 +21,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float slowDuration = 2f;
 
    private Transform target;
+   private float releaseTime;   // Giai đoạn 8: thời điểm tự trả về pool (thay Destroy hẹn giờ)
 
     private void Awake()
     {
@@ -30,9 +31,11 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void Start()
+    // Giai đoạn 8: reset khi lấy từ pool. target được SetTarget gán ngay sau Get.
+    private void OnEnable()
     {
-        Destroy(gameObject, bulletLifetime);
+        target = null;
+        releaseTime = Time.time + bulletLifetime;
     }
 
     public void SetTarget(Transform _target)
@@ -42,9 +45,14 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Time.time >= releaseTime)
+        {
+            SimplePool.Release(gameObject);
+            return;
+        }
         if (!target)
         {
-            Destroy(gameObject);
+            SimplePool.Release(gameObject);
             return;
         }
 
@@ -71,7 +79,7 @@ public class Bullet : MonoBehaviour
         }
 
         Detonate();
-        Destroy(gameObject);
+        SimplePool.Release(gameObject);
     }
 
     // Single/Slow: chỉ trúng mục tiêu. Explosive: quét OverlapCircle gây sát thương diện rộng.

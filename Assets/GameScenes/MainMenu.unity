@@ -156,7 +156,7 @@ MonoBehaviour:
   bestStarsText: {fileID: 819326062}
   startButton: {fileID: 651939499}
   backButton: {fileID: 1328716175}
-  gameplaySceneName: 0 (1)
+  gameplaySceneName: Gameplay
 --- !u!224 &78687651
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4194,7 +4194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Quantall.Runtime::Player
   playerName: 
-  settings: {fileID: 0}
+  settings: {fileID: 11400000, guid: 74eeb5e966182404db85f5323af7d08b, type: 2}
 --- !u!4 &1764724812
 Transform:
   m_ObjectHideFlags: 0
@@ -4614,7 +4614,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f240bf824a87f4b9d1b937790b5971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Quantall.Runtime::SettingsView
-  settings: {fileID: 0}
+  settings: {fileID: 11400000, guid: 74eeb5e966182404db85f5323af7d08b, type: 2}
   musicSlider: {fileID: 1636803285}
   sfxSlider: {fileID: 1070799120}
   qualityDropdown: {fileID: 0}

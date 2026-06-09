@@ -61,3 +61,20 @@ sysinfo.txt
 #  Unity AI Assistant local settings (per-machine)
 # ============================================================
 /[Pp]roject[Ss]ettings/[Pp]ackages/com.unity.ai.assistant/
+
+# ============================================================
+#  Claude Code (per-machine local settings)
+# ============================================================
+.claude/settings.local.json
+# Skill docs auto-generated from the connected Unity MCP tools
+.claude/skills/
+
+# ============================================================
+#  Unity MCP bridge — auto-restored dev tooling (not game content)
+# ============================================================
+# Assets/Plugins currently holds only the NuGet DLLs restored by the
+# com.IvanMurzak.McpPlugin UPM package (regenerated on demand, not referenced
+# by Quantall.Runtime). Ignore the whole folder + its meta. If real game
+# plugins are ever added here, narrow this back to /Assets/Plugins/NuGet/.
+/[Aa]ssets/[Pp]lugins/
+/[Aa]ssets/[Pp]lugins.meta

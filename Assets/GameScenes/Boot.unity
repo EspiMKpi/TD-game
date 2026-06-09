@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Quantall.Runtime::Boot
   mainMenuScene: MainMenu
+  settings: {fileID: 11400000, guid: 74eeb5e966182404db85f5323af7d08b, type: 2}
 --- !u!4 &1920505660
 Transform:
   m_ObjectHideFlags: 0

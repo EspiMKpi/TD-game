@@ -20,7 +20,8 @@ public class Player : MonoBehaviour
     // UC12 — thoát game.
     public void exit()
     {
-        // TODO Giai đoạn 7: lưu tiến trình trước khi thoát.
+        // Giai đoạn 7: lưu cài đặt trước khi thoát.
+        if (settings != null) SaveSystem.SaveSettings(settings);
         Application.Quit();
     }
 }

@@ -111,7 +111,7 @@ public class TurretScript : MonoBehaviour
     private void FireBulletAt(Transform t)
     {
         if (t == null) return;
-        GameObject bulletObj = Instantiate(bulletPrefab, firingPoint.position, Quaternion.identity);
+        GameObject bulletObj = SimplePool.Get(bulletPrefab, firingPoint.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         if (bulletScript != null) bulletScript.SetTarget(t);
     }

@@ -16,6 +16,31 @@ public class EnemyMovement : MonoBehaviour
     private float slowTimer = 0f;
     public float SlowMultiplier => slowMultiplier;
 
+    private int baseDamageToBase = -1;   // sát thương gốc (cache) cho cân bằng độ khó
+    public int DamageToBase => damageToBase;
+
+    private void Awake()
+    {
+        if (baseDamageToBase < 0) baseDamageToBase = damageToBase;
+    }
+
+    // Giai đoạn 8: reset trạng thái khi lấy lại từ pool.
+    private void OnEnable()
+    {
+        pathIndex = 0;
+        slowMultiplier = 1f;
+        slowTimer = 0f;
+        if (Level_Manager.main != null && Level_Manager.main.path != null && Level_Manager.main.path.Length > 0)
+            target = Level_Manager.main.path[0];
+    }
+
+    // Giai đoạn 8: nhân sát thương lên căn cứ theo độ khó (dựa trên giá trị gốc).
+    public void ApplyDifficulty(float multiplier)
+    {
+        if (baseDamageToBase < 0) baseDamageToBase = damageToBase;
+        damageToBase = Mathf.Max(1, Mathf.RoundToInt(baseDamageToBase * multiplier));
+    }
+
     // Làm chậm (tháp Slow / đạn làm chậm): áp hệ số mạnh nhất, làm mới thời gian hiệu lực.
     public void ApplySlow(float multiplier, float duration)
     {
@@ -63,7 +88,7 @@ public class EnemyMovement : MonoBehaviour
                     Base.main.takeDamage(damageToBase);
                 }
                 EnemySpawner.onEnemyDestroy.Invoke();
-                Destroy(gameObject);
+                SimplePool.Release(gameObject);   // Giai đoạn 8: trả về pool
                 return;
             }
             else

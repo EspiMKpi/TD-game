@@ -23,9 +23,22 @@ public class Plot : MonoBehaviour
         sr.color = startColor;
     }
 
+    // UC7 — gọi sau khi bán tháp để ô trống trở lại.
+    public void ClearTower()
+    {
+        tower = null;
+    }
+
     private void OnMouseDown()
     {
-        if (tower != null) return;
+        // UC6/UC7 — ô đã có tháp: mở bảng nâng cấp/bán thay vì xây mới.
+        if (tower != null)
+        {
+            TurretScript turret = tower.GetComponentInChildren<TurretScript>();
+            if (turret != null && TowerActionView.Instance != null)
+                TowerActionView.Instance.Show(turret, this);
+            return;
+        }
 
         Tower towerToBuild = BuildManager.main.GetSelectedTower();
 
