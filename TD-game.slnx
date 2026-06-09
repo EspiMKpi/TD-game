@@ -1,3 +1,6 @@
 ﻿<Solution>
+  <Project Path="Quantall.Tests.EditMode.csproj" />
+  <Project Path="Quantall.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Quantall.Tests.PlayMode.csproj" />
 </Solution>

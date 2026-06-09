@@ -1,7 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using System;
 
 public class Menu : MonoBehaviour
 {
@@ -10,6 +8,7 @@ public class Menu : MonoBehaviour
     [SerializeField] Animator anim;
 
     private bool isMenuOpen = true;
+
 
     public void ToggleMenu()
     {

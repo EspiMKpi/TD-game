@@ -29,13 +29,24 @@ public class Plot : MonoBehaviour
 
         Tower towerToBuild = BuildManager.main.GetSelectedTower();
 
-        if(towerToBuild.cost > Level_Manager.main.currency){
-            Debug.Log("You can't afford this tower");
-            return;
+        GameObject built;
+        if (GameSession.Instance != null)
+        {
+            // UC5 — định tuyến qua GameSession (trung tâm điều phối).
+            built = GameSession.Instance.buildTower(towerToBuild, transform.position);
+        }
+        else
+        {
+            // Fallback: scene chưa có GameSession — giữ luồng cũ qua Level_Manager.
+            if (towerToBuild.cost > Level_Manager.main.currency)
+            {
+                Debug.Log("You can't afford this tower");
+                return;
+            }
+            Level_Manager.main.SpendCurrency(towerToBuild.cost);
+            built = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
         }
 
-        Level_Manager.main.SpendCurrency(towerToBuild.cost);
-        
-        tower = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
+        if (built != null) tower = built;
     }
 }

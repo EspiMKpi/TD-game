@@ -10,6 +10,16 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float bulletLifetime = 5f;
     [SerializeField] private int bulletDamage = 1;
 
+    [Header("Projectile Type")]
+    [SerializeField] private ProjectileType projectileType = ProjectileType.Single;
+    [SerializeField] private float explosionRadius = 1.5f;   // chỉ dùng cho loại Explosive
+    [SerializeField] private LayerMask enemyMask;            // lớp địch để quét AoE
+
+    [Header("Slow (tuỳ chọn — cho đạn tháp Slow)")]
+    [SerializeField] private bool appliesSlow = false;
+    [SerializeField] private float slowMultiplier = 0.5f;
+    [SerializeField] private float slowDuration = 2f;
+
    private Transform target;
 
     private void Awake()
@@ -60,13 +70,39 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Health health = target.GetComponent<Health>();
-        if (health != null)
-        {
-            health.TakeDamage(bulletDamage);
-        }
-
+        Detonate();
         Destroy(gameObject);
+    }
+
+    // Single/Slow: chỉ trúng mục tiêu. Explosive: quét OverlapCircle gây sát thương diện rộng.
+    private void Detonate()
+    {
+        if (projectileType == ProjectileType.Explosive)
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyMask);
+            foreach (Collider2D hit in hits)
+            {
+                ApplyHit(hit.transform);
+            }
+        }
+        else
+        {
+            ApplyHit(target);
+        }
+    }
+
+    private void ApplyHit(Transform enemy)
+    {
+        if (enemy == null) return;
+
+        Health health = enemy.GetComponentInParent<Health>();
+        if (health != null) health.TakeDamage(bulletDamage);
+
+        if (appliesSlow)
+        {
+            EnemyMovement move = enemy.GetComponentInParent<EnemyMovement>();
+            if (move != null) move.ApplySlow(slowMultiplier, slowDuration);
+        }
     }
 
     private bool IsTargetCollider(Collider2D other)
