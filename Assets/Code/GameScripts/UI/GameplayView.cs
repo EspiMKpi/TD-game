@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// HUD trong màn chơi (Giai đoạn 6). Cập nhật bằng polling trong Update cho gọn,
-// nối nút bấm tới GameSession / EnemySpawner. Kéo thả tham chiếu UI trong Editor.
 public class GameplayView : MonoBehaviour
 {
     [Header("Texts")]
@@ -18,6 +16,7 @@ public class GameplayView : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button callNextWaveButton;   // UC8
     [SerializeField] private Button pauseButton;          // UC10
+    [SerializeField] private PauseView pauseView;         // cửa sổ tạm dừng (UC10)
 
     [Header("Shop responsiveness")]
     [SerializeField] private RectTransform shopPanel;     // RectTransform của Menu (vị trí slide thực)
@@ -78,6 +77,8 @@ public class GameplayView : MonoBehaviour
 
     private void OnPause()
     {
-        if (GameSession.Instance != null) GameSession.Instance.pause();
+        // Mở cửa sổ tạm dừng (Tiếp tục/Chơi lại/Cài đặt/Menu chính). Fallback: chỉ dừng.
+        if (pauseView != null) pauseView.Pause();
+        else if (GameSession.Instance != null) GameSession.Instance.pause();
     }
 }
