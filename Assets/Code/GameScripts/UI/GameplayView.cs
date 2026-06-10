@@ -18,6 +18,11 @@ public class GameplayView : MonoBehaviour
     [SerializeField] private Button callNextWaveButton;   // UC8
     [SerializeField] private Button pauseButton;          // UC10
 
+    [Header("Shop responsiveness")]
+    [SerializeField] private Menu shopMenu;               // nút next-wave dịch tránh khi shop mở
+    [SerializeField] private float nextWaveRestX = -20f;       // vị trí x khi shop đóng
+    [SerializeField] private float nextWaveMenuOpenX = -320f;  // vị trí x khi shop mở (tránh panel)
+
     private void Start()
     {
         if (callNextWaveButton != null) callNextWaveButton.onClick.AddListener(OnCallNextWave);
@@ -29,9 +34,13 @@ public class GameplayView : MonoBehaviour
         var gs = GameSession.Instance;
         if (gs != null)
         {
-            if (resourcesText != null) resourcesText.text = gs.currentResources.ToString();
-            if (waveText != null) waveText.text = "Wave " + gs.CurrentWaveIndex;
-            if (scoreText != null) scoreText.text = gs.Score.ToString();
+            if (resourcesText != null) resourcesText.text = "Tiền: " + gs.currentResources;
+            if (waveText != null)
+            {
+                int total = EnemySpawner.main != null ? EnemySpawner.main.TotalWaves : 0;
+                waveText.text = "Wave " + gs.CurrentWaveIndex + "/" + total;
+            }
+            if (scoreText != null) scoreText.text = "Điểm: " + gs.Score;
         }
 
         if (baseHpSlider != null && Base.main != null)
@@ -40,9 +49,19 @@ public class GameplayView : MonoBehaviour
             baseHpSlider.value = Base.main.CurrentHP;
         }
 
-        // Khóa nút gọi wave sớm tới khi đạt 80% (UC8).
-        if (callNextWaveButton != null && EnemySpawner.main != null)
-            callNextWaveButton.interactable = EnemySpawner.main.CanCallNextWaveEarly();
+        if (callNextWaveButton != null)
+        {
+            // Khóa nút gọi wave sớm tới khi đạt 80% (UC8).
+            if (EnemySpawner.main != null)
+                callNextWaveButton.interactable = EnemySpawner.main.CanCallNextWaveEarly();
+
+            // Luôn hiện nhưng dịch trái khi shop mở để không bị panel che (phản hồi theo menu).
+            var rt = (RectTransform)callNextWaveButton.transform;
+            float targetX = (shopMenu != null && shopMenu.IsMenuOpen) ? nextWaveMenuOpenX : nextWaveRestX;
+            Vector2 ap = rt.anchoredPosition;
+            ap.x = Mathf.Lerp(ap.x, targetX, Time.unscaledDeltaTime * 12f);
+            rt.anchoredPosition = ap;
+        }
     }
 
     private void OnCallNextWave()

@@ -103,6 +103,8 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public int TotalWaves => totalWaves;
+
     // Đặt tổng số wave theo Level đã chọn (Giai đoạn 7).
     public void SetTotalWaves(int t)
     {

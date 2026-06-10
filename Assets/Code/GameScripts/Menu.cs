@@ -8,6 +8,13 @@ public class Menu : MonoBehaviour
     [SerializeField] Animator anim;
 
     private bool isMenuOpen = true;
+    public bool IsMenuOpen => isMenuOpen;
+
+    private void Start()
+    {
+        // Đồng bộ animator với trạng thái ban đầu (mở) để hình ảnh khớp logic ngay từ đầu.
+        if (anim != null) anim.SetBool("MenuOpen", isMenuOpen);
+    }
 
 
     public void ToggleMenu()
