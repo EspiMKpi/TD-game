@@ -19,3 +19,4 @@ MonoBehaviour:
   effectRadius: 3
   effectDuration: 5
   effectPower: 0
+  tintColor: {r: 0.4, g: 1, b: 0.45, a: 1}

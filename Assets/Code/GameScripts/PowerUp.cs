@@ -13,6 +13,7 @@ public class PowerUp : ScriptableObject
     public float effectRadius;
     public float effectDuration;
     public int effectPower = 1;    // Airstrike: sát thương; Portal: số waypoint lùi lại
+    public Color tintColor = Color.white;   // màu chỉ báo tầm (vòng tròn trong suốt)
 
     // Theo thiết kế: kết tập các đối tượng chịu tác động (Tower data class -> TurretScript thực thể;
     // Enemy -> EnemyMovement, do lớp Enemy chưa tách riêng).
