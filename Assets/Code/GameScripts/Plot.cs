@@ -31,6 +31,10 @@ public class Plot : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // UC9 — đang "lên đạn" power-up: dành cú click này cho power-up (PowerUpView),
+        // không xây tháp / không mở bảng tháp. OnMouseDown chạy trước Update nên IsArmed còn true.
+        if (PowerUpView.Instance != null && PowerUpView.Instance.IsArmed) return;
+
         // UC6/UC7 — ô đã có tháp: mở bảng nâng cấp/bán thay vì xây mới.
         if (tower != null)
         {

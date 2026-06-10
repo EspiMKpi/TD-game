@@ -17,6 +17,14 @@ public class PowerUpView : MonoBehaviour
 
     private int armedIndex = -1;   // slot đang chờ chọn vị trí; -1 = không
 
+    public static PowerUpView Instance { get; private set; }
+    public bool IsArmed => armedIndex >= 0;   // đang chờ chọn vị trí dùng power-up
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         if (worldCamera == null) worldCamera = Camera.main;

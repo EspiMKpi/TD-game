@@ -122,6 +122,12 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 - **Thêm theo yêu cầu:** tháp chỉ bắn khi đã quay đúng hướng mục tiêu (`IsAimedAtTarget`, ngưỡng `aimToleranceDeg`=8°); đạn biến mất tại đúng vị trí lẽ ra va chạm khi địch chết trước.
 - **Kiểm thử (play-mode):** đạn homing đúng; khi mục tiêu `SetActive(false)`, velocity đạn chuyển về hướng điểm va chạm (5,0→40); tại điểm va chạm `FixedUpdate` → đạn `active=false` (trả pool). (Position không tiến giữa các lệnh MCP do editor không step khi mất focus — không phải lỗi code.)
 
+### 2026-06-10 — BUG-08: dùng power-up trên map còn xây nhầm tháp — ĐÃ SỬA
+- **Hiện tượng:** "không dùng được power-up". Thực ra mọi khâu chạy (slot hiện/arm, Input cũ ở chế độ Both, Camera.main, `activatePowerUp` trừ tiền đúng), NHƯNG khi click map để dùng power-up, cú click cũng rơi vào `Plot.OnMouseDown` → **xây tháp**; nếu click chỗ không có địch thì hiệu ứng power-up vô hình → người chơi tưởng power-up hỏng (chỉ thấy tháp mọc).
+- **Sửa:** `PowerUpView` thêm `Instance` + `IsArmed`; `Plot.OnMouseDown` bỏ qua click khi đang arm power-up (OnMouseDown chạy trước Update nên IsArmed còn true). Click giờ dành riêng cho power-up.
+- **Kiểm thử:** arm power-up → click plot → currency **không đổi** (không xây tháp); activate power-up trừ đúng tiền.
+- **Cách dùng:** bấm 1 slot power-up (góc trái-dưới) → con trỏ "lên đạn" → click lên map (gần địch cho Portal/Airstrike, gần tháp cho SpeedBoost); chuột phải để huỷ.
+
 ### 2026-06-10 — Sửa cụm bug (BUG-01, 03, 04, 05, 06) — ĐÃ SỬA
 - **BUG-01:** Thêm cờ `earlyCallPending` — chỉ cho gọi wave sớm **1 lần** tới khi batch hiện tại kết thúc (`StartWave`/`EndWave` reset cờ). Hết stack wave vô hạn.
 - **BUG-03:** `EnemySpawner.Awake` `RemoveListener` trước `AddListener` + thêm `OnDestroy` gỡ listener → event tĩnh không cộng dồn (quan trọng khi đã có pooling).
