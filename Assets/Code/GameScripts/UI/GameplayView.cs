@@ -20,9 +20,12 @@ public class GameplayView : MonoBehaviour
     [SerializeField] private Button pauseButton;          // UC10
 
     [Header("Shop responsiveness")]
-    [SerializeField] private Menu shopMenu;               // nút next-wave dịch tránh khi shop mở
-    [SerializeField] private float nextWaveRestX = -20f;       // vị trí x khi shop đóng
-    [SerializeField] private float nextWaveMenuOpenX = -320f;  // vị trí x khi shop mở (tránh panel)
+    [SerializeField] private RectTransform shopPanel;     // RectTransform của Menu (vị trí slide thực)
+    [SerializeField] private RectTransform shopToggle;    // nút Shop — đi theo panel, đồng tốc
+    [SerializeField] private float shopHiddenX = 200f;    // anchoredPos.x của shop khi ẩn
+    [SerializeField] private float shopOpenX = -150f;     // anchoredPos.x của shop khi mở
+    [SerializeField] private float toggleRestX = -20f;    // x của toggle khi shop ẩn (góc phải)
+    [SerializeField] private float toggleOpenX = -320f;   // x của toggle khi shop mở (tránh panel)
 
     private void Start()
     {
@@ -53,18 +56,18 @@ public class GameplayView : MonoBehaviour
             baseHpSlider.value = Base.main.CurrentHP;
         }
 
-        if (callNextWaveButton != null)
-        {
-            // Khóa nút gọi wave sớm tới khi đạt 80% (UC8).
-            if (EnemySpawner.main != null)
-                callNextWaveButton.interactable = EnemySpawner.main.CanCallNextWaveEarly();
+        // Khóa nút gọi wave sớm tới khi đạt 80% (UC8). Nút này nằm cố định góc trái (dưới Wave).
+        if (callNextWaveButton != null && EnemySpawner.main != null)
+            callNextWaveButton.interactable = EnemySpawner.main.CanCallNextWaveEarly();
 
-            // Luôn hiện nhưng dịch trái khi shop mở để không bị panel che (phản hồi theo menu).
-            var rt = (RectTransform)callNextWaveButton.transform;
-            float targetX = (shopMenu != null && shopMenu.IsMenuOpen) ? nextWaveMenuOpenX : nextWaveRestX;
-            Vector2 ap = rt.anchoredPosition;
-            ap.x = Mathf.Lerp(ap.x, targetX, Time.unscaledDeltaTime * 12f);
-            rt.anchoredPosition = ap;
+        // Nút Shop luôn hiện, đi theo panel shop ĐỒNG TỐC: lái trực tiếp theo vị trí slide thực
+        // của shop (không lerp riêng) nên ra/vào khớp đúng tốc độ animation của shop.
+        if (shopPanel != null && shopToggle != null)
+        {
+            float t = Mathf.InverseLerp(shopHiddenX, shopOpenX, shopPanel.anchoredPosition.x);
+            Vector2 ap = shopToggle.anchoredPosition;
+            ap.x = Mathf.Lerp(toggleRestX, toggleOpenX, t);
+            shopToggle.anchoredPosition = ap;
         }
     }
 

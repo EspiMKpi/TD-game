@@ -1508,9 +1508,12 @@ MonoBehaviour:
   baseHpSlider: {fileID: 0}
   callNextWaveButton: {fileID: 1762396105}
   pauseButton: {fileID: 1217647721}
-  shopMenu: {fileID: 740149554}
-  nextWaveRestX: -20
-  nextWaveMenuOpenX: -320
+  shopPanel: {fileID: 740149553}
+  shopToggle: {fileID: 431013990}
+  shopHiddenX: 200
+  shopOpenX: -150
+  toggleRestX: -20
+  toggleOpenX: -320
 --- !u!1 &230677920
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,11 +2609,11 @@ RectTransform:
   - {fileID: 461762548}
   m_Father: {fileID: 230344378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -120}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -20, y: 20}
   m_SizeDelta: {x: 150, y: 46}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &431013991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10626,11 +10629,11 @@ RectTransform:
   - {fileID: 279288222}
   m_Father: {fileID: 230344378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -66}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -120}
   m_SizeDelta: {x: 160, y: 46}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1762396105
 MonoBehaviour:
   m_ObjectHideFlags: 0
