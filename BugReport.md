@@ -128,6 +128,12 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 - **Kiểm thử:** arm power-up → click plot → currency **không đổi** (không xây tháp); activate power-up trừ đúng tiền.
 - **Cách dùng:** bấm 1 slot power-up (góc trái-dưới) → con trỏ "lên đạn" → click lên map (gần địch cho Portal/Airstrike, gần tháp cho SpeedBoost); chuột phải để huỷ.
 
+### 2026-06-10 — Regression toàn diện trước khi build — TẤT CẢ PASS (32/32)
+Chạy lại toàn bộ qua MCP. **Compile sạch, 0 lỗi/0 cảnh báo runtime.**
+- **EditMode (19/19):** kinh tế (spend/build/upgrade/sell + chặn max cấp), status Lost, power-up (kích hoạt/cooldown/thiếu tiền), `ApplyDifficulty` (Health/EnemyMovement), `ApplySlow`, spawner config-driven (`PlannedEnemiesForWave` công thức vs Wave), save/load Level + Settings, `unlockNext` mở khóa.
+- **PlayMode (13/13):** scene Gameplay + managers khởi tạo (GameSession/Base/EnemySpawner/Level_Manager/BuildManager), pooling (`SimplePool` tái dùng + `OnEnable` reset máu), `powerUps`=3 + chỉ báo tầm wired, `TowerActionView` có mặt, Plot guard (đang arm power-up → click không xây tháp), power-up trừ tiền khi dùng, lose-condition (`Base`→`Lost`).
+- **Trạng thái:** tất cả 8 giai đoạn kế hoạch + UC1–UC12 hoạt động; toàn bộ bug BUG-01→08 đã sửa; còn lại chỉ SFX/nhạc/localization (cần asset chuyên dụng).
+
 ### 2026-06-10 — Sửa cụm bug (BUG-01, 03, 04, 05, 06) — ĐÃ SỬA
 - **BUG-01:** Thêm cờ `earlyCallPending` — chỉ cho gọi wave sớm **1 lần** tới khi batch hiện tại kết thúc (`StartWave`/`EndWave` reset cờ). Hết stack wave vô hạn.
 - **BUG-03:** `EnemySpawner.Awake` `RemoveListener` trước `AddListener` + thêm `OnDestroy` gỡ listener → event tĩnh không cộng dồn (quan trọng khi đã có pooling).
