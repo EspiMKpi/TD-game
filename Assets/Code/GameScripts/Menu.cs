@@ -18,7 +18,9 @@ public class Menu : MonoBehaviour
 
     private void OnGUI()
     {
-        currencyUI.text = Level_Manager.main.currency.ToString();
+        // BUG-04: null-guard tránh NullReferenceException mỗi frame nếu thiếu tham chiếu.
+        if (currencyUI != null && Level_Manager.main != null)
+            currencyUI.text = Level_Manager.main.currency.ToString();
     }
 
 }

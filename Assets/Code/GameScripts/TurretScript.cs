@@ -117,11 +117,17 @@ public class TurretScript : MonoBehaviour
     }
     private void FindTarget()
     {
-        RaycastHit2D[] hits =Physics2D.CircleCastAll(transform.position, targetingRange, (Vector2) transform.position, 0f, enemyMask);
-        if (hits.Length > 0)
+        // BUG-05: dùng OverlapCircleAll (đúng ngữ nghĩa) và chọn địch GẦN NHẤT trong tầm,
+        // thay cho CircleCastAll với hướng = vị trí + lấy hits[0] tùy ý.
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, targetingRange, enemyMask);
+        float best = float.MaxValue;
+        Transform nearest = null;
+        foreach (Collider2D h in hits)
         {
-            target = hits[0].transform;
+            float d = ((Vector2)(h.transform.position - transform.position)).sqrMagnitude;
+            if (d < best) { best = d; nearest = h.transform; }
         }
+        target = nearest;
     }
 
     private bool CheckTargetIsInRange()

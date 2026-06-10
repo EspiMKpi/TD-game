@@ -107,3 +107,11 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 - Khi ván kết thúc, `ResultView` đặt `Time.timeScale=0`; chỉ reset về 1 khi bấm Restart/Menu. Bình thường OK, nhưng nếu thoát ván bằng đường khác cần đảm bảo reset timeScale.
 
 **Bug cũ còn mở (commit merge KHÔNG sửa):** BUG-01 (cổng 80%), BUG-03 (`onEnemyDestroy` static + AddListener trong Awake), BUG-04/05/06.
+
+### 2026-06-10 — Sửa cụm bug (BUG-01, 03, 04, 05, 06) — ĐÃ SỬA
+- **BUG-01:** Thêm cờ `earlyCallPending` — chỉ cho gọi wave sớm **1 lần** tới khi batch hiện tại kết thúc (`StartWave`/`EndWave` reset cờ). Hết stack wave vô hạn.
+- **BUG-03:** `EnemySpawner.Awake` `RemoveListener` trước `AddListener` + thêm `OnDestroy` gỡ listener → event tĩnh không cộng dồn (quan trọng khi đã có pooling).
+- **BUG-04:** `Menu.OnGUI` null-guard `currencyUI`/`Level_Manager.main`.
+- **BUG-05:** `TurretScript.FindTarget` đổi sang `Physics2D.OverlapCircleAll` + chọn địch **gần nhất** (thay `CircleCastAll` hướng = vị trí, lấy `hits[0]` tùy ý).
+- **BUG-06:** `EnemyMovement.Start/Update/FixedUpdate` null-guard cho `target`/`Level_Manager.main.path`.
+- **Kiểm thử:** compile sạch (0 lỗi); play-mode smoke test — địch spawn & di chuyển đúng theo path (TEST_ENEMY: (-0.5,5.5)→(-6.46,0.06)), wave thật chạy (EnemiesAlive=9), **0 lỗi runtime**.

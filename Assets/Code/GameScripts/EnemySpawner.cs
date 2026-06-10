@@ -29,6 +29,7 @@ public class EnemySpawner : MonoBehaviour
 
     private int enemiesThisWave;        // tổng địch dự kiến của wave hiện tại (mốc tính 80%)
     private int spawnedInCurrentWave;   // số địch đã sinh của wave hiện tại
+    private bool earlyCallPending;      // BUG-01: đã gọi wave sớm 1 lần, chờ batch hiện tại xong
 
     // Giai đoạn 6: cấu hình theo Level.waves (nếu có) — cho phép nhiều loại lính.
     private Level currentLevel;
@@ -39,7 +40,15 @@ public class EnemySpawner : MonoBehaviour
     private void Awake()
     {
         main = this;
+        // BUG-03: event tĩnh không tự reset (Domain Reload tắt / reload scene) -> RemoveListener
+        // trước khi Add để tránh cộng dồn listener (làm enemiesAlive giảm sai khi đã có pooling).
+        onEnemyDestroy.RemoveListener(EnemyDestroyed);
         onEnemyDestroy.AddListener(EnemyDestroyed);
+    }
+
+    private void OnDestroy()
+    {
+        onEnemyDestroy.RemoveListener(EnemyDestroyed);
     }
 
     private void Start()
@@ -86,6 +95,7 @@ public class EnemySpawner : MonoBehaviour
         ApplyWaveConfig(currentWave);
         enemiesLeftToSpawn = enemiesThisWave;
         spawnedInCurrentWave = 0;
+        earlyCallPending = false;
 
         if (GameSession.Instance != null)
         {
@@ -109,6 +119,7 @@ public class EnemySpawner : MonoBehaviour
     // UC8 — chỉ cho gọi wave kế sớm khi đã sinh >= 80% wave hiện tại.
     public bool CanCallNextWaveEarly()
     {
+        if (earlyCallPending) return false;   // BUG-01: chặn gọi wave sớm chồng nhiều lần
         if (!isSpawning || enemiesThisWave <= 0) return false;
         int threshold = Mathf.CeilToInt(enemiesThisWave * 0.8f);
         return spawnedInCurrentWave >= threshold;
@@ -117,6 +128,7 @@ public class EnemySpawner : MonoBehaviour
     public bool CallNextWaveEarly()
     {
         if (!CanCallNextWaveEarly()) return false;
+        earlyCallPending = true;   // chỉ cho gọi sớm 1 lần tới khi batch hiện tại kết thúc
 
         currentWave++;
         ApplyWaveConfig(currentWave);            // số lính/tốc độ/prefab theo wave mới
@@ -134,6 +146,7 @@ public class EnemySpawner : MonoBehaviour
     {
         isSpawning = false;
         timeSinceLastSpawn = 0f;
+        earlyCallPending = false;
 
         // UC11 — qua wave cuối thì thắng, không sinh thêm.
         if (currentWave >= totalWaves)

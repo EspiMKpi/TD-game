@@ -64,7 +64,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Start()
     {
-        target = Level_Manager.main.path[pathIndex];
+        // BUG-06: null-guard cho path.
+        if (Level_Manager.main != null && Level_Manager.main.path != null
+            && pathIndex < Level_Manager.main.path.Length)
+            target = Level_Manager.main.path[pathIndex];
     }
 
     private void Update()
@@ -74,6 +77,9 @@ public class EnemyMovement : MonoBehaviour
             slowTimer -= Time.deltaTime;
             if (slowTimer <= 0f) slowMultiplier = 1f;
         }
+
+        // BUG-06: null-guard cho target/path (tránh NRE nếu chưa khởi tạo đường đi).
+        if (target == null || Level_Manager.main == null || Level_Manager.main.path == null) return;
 
         if (Vector2.Distance(target.position, transform.position) <= 0.1f)
         {
@@ -100,6 +106,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (target == null) return;   // BUG-06
         Vector2 direction = (target.position - transform.position). normalized;
 
         rb.linearVelocity = direction * moveSpeed * slowMultiplier;
