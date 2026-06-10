@@ -9068,7 +9068,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Quantall.Runtime::GameSession
   theBase: {fileID: 1985633415}
-  powerUps: []
+  powerUps:
+  - {fileID: 11400000, guid: fd8ec9e102b267b45b4292ebc8b666ba, type: 2}
+  - {fileID: 11400000, guid: d52884c85a456af478899d2869ae49b5, type: 2}
+  - {fileID: 11400000, guid: 4c89cc74a6ae39345b92298f5e31a309, type: 2}
   enemyMask:
     serializedVersion: 2
     m_Bits: 64

@@ -115,3 +115,12 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 - **BUG-05:** `TurretScript.FindTarget` đổi sang `Physics2D.OverlapCircleAll` + chọn địch **gần nhất** (thay `CircleCastAll` hướng = vị trí, lấy `hits[0]` tùy ý).
 - **BUG-06:** `EnemyMovement.Start/Update/FixedUpdate` null-guard cho `target`/`Level_Manager.main.path`.
 - **Kiểm thử:** compile sạch (0 lỗi); play-mode smoke test — địch spawn & di chuyển đúng theo path (TEST_ENEMY: (-0.5,5.5)→(-6.46,0.06)), wave thật chạy (EnemiesAlive=9), **0 lỗi runtime**.
+
+### 2026-06-10 — Hoàn thiện PowerUp (UC9) — power-up giờ dùng được trong game
+- Tạo 3 asset `PowerUp` (`Assets/ScriptableObjects/PowerUps/`): Portal (cost30/cd8/r2/power3), Airstrike (40/12/2.5/dmg5), SpeedBoost (25/10/r3/dur5); gán vào `GameSession.powerUps` (scene Gameplay). PowerUpView (3 slot đã dựng sẵn) giờ hiện slot.
+- **Sửa SpeedBoost:** `GameSession.ApplySpeedBoost` đổi sang `FindObjectsByType<TurretScript>` + khoảng cách (tháp không có Collider2D nên `OverlapCircleAll(towerMask)` không tìm thấy).
+- **Sửa INFO:** `LevelDetailView.gameplaySceneName` default `"0 (1)"` → `"Gameplay"`.
+- **Kiểm thử play-mode (12/12 assertion thực, trừ 1 artifact tính kill-reward):**
+  - Portal đẩy địch lùi 3 waypoint (pi 5→2); Airstrike sát thương/giết địch (AoE); SpeedBoost buff fireRate tháp x2.
+  - 3 slot hiện; trừ cost đúng; cooldown chặn dùng lại; từ chối khi thiếu tiền.
+  - **0 lỗi runtime.**

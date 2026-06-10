@@ -211,12 +211,15 @@ public class GameSession : MonoBehaviour
     }
 
     // SpeedBoost — buff tốc độ bắn các tháp trong bán kính trong effectDuration.
+    // Tháp không có Collider2D (không cần physics) -> quét trực tiếp theo khoảng cách,
+    // không phụ thuộc towerMask.
     private void ApplySpeedBoost(PowerUp p, Vector3 pos)
     {
-        foreach (Collider2D h in Physics2D.OverlapCircleAll(pos, p.effectRadius, towerMask))
+        float sqr = p.effectRadius * p.effectRadius;
+        foreach (TurretScript t in FindObjectsByType<TurretScript>(FindObjectsSortMode.None))
         {
-            TurretScript t = h.GetComponentInParent<TurretScript>();
-            if (t != null) t.BoostFireRate(2f, p.effectDuration);
+            if (((Vector2)(t.transform.position - pos)).sqrMagnitude <= sqr)
+                t.BoostFireRate(2f, p.effectDuration);
         }
     }
 

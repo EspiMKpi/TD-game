@@ -16,7 +16,7 @@ public class LevelDetailView : MonoBehaviour
     [SerializeField] private Button backButton;
 
     [Header("Scene")]
-    [SerializeField] private string gameplaySceneName = "0 (1)";
+    [SerializeField] private string gameplaySceneName = "Gameplay";
 
     private Level current;
 
