@@ -22,6 +22,8 @@ public class Bullet : MonoBehaviour
 
    private Transform target;
    private float releaseTime;   // Giai đoạn 8: thời điểm tự trả về pool (thay Destroy hẹn giờ)
+   private Vector3 lastTargetPos;   // điểm tới gần nhất (homing) — dùng khi mục tiêu chết giữa đường
+   private bool hasLastPos;
 
     private void Awake()
     {
@@ -35,6 +37,7 @@ public class Bullet : MonoBehaviour
     private void OnEnable()
     {
         target = null;
+        hasLastPos = false;
         releaseTime = Time.time + bulletLifetime;
     }
 
@@ -50,15 +53,28 @@ public class Bullet : MonoBehaviour
             SimplePool.Release(gameObject);
             return;
         }
-        if (!target)
+
+        // Địch còn sống? Pooling chỉ SetActive(false) -> phải kiểm activeInHierarchy,
+        // không chỉ null, nếu không đạn sẽ bám mãi vào Transform "đóng băng" của địch đã chết.
+        bool alive = target != null && target.gameObject.activeInHierarchy;
+        if (alive)
         {
-            SimplePool.Release(gameObject);
+            lastTargetPos = target.position;   // homing: luôn cập nhật điểm tới
+            hasLastPos = true;
+        }
+        else if (!hasLastPos)
+        {
+            SimplePool.Release(gameObject);    // chưa từng có mục tiêu hợp lệ -> biến mất
+            return;
+        }
+        else if (Vector2.Distance(transform.position, lastTargetPos) <= 0.15f)
+        {
+            SimplePool.Release(gameObject);    // mục tiêu đã chết: bay tới điểm va chạm dự kiến -> biến mất
             return;
         }
 
-        Vector2 direction = (target.position - transform.position).normalized;
-
-        rb.linearVelocity = direction * bulletSpeed; 
+        Vector2 direction = ((Vector2)lastTargetPos - (Vector2)transform.position).normalized;
+        rb.linearVelocity = direction * bulletSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

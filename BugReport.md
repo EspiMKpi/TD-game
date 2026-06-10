@@ -114,6 +114,14 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 - **Test Chương 5:** thêm `UseCaseExceptionTests.cs` — UC6 từ chối khi max cấp, UC9 từ chối khi hồi chiêu / thiếu tiền, `unlockNext` mở khóa + lưu. Kiểm động **9/9 PASS**.
 - **0 lỗi** trong tất cả phiên test.
 
+### 2026-06-10 — BUG-07 (NGHIÊM TRỌNG): đạn "đóng băng" tại điểm va chạm, tháp bắn mãi vào địch đã chết — ĐÃ SỬA
+- **Nguyên nhân:** sau pooling (GĐ8), địch chết chỉ bị `SetActive(false)` (`Health`/`EnemyMovement` → `SimplePool.Release`), Transform **vẫn tồn tại** → `target == null` trả về **false** (fake-null chỉ áp dụng cho object bị Destroy). Vì vậy `Bullet` và `TurretScript` chỉ kiểm null → tháp giữ target chết, đạn bay mãi về Transform "đóng băng", tháp bắn dồn vào chỗ đó; địch mới vào tầm thì cả đám đạn lại đổi hướng.
+- **Sửa:**
+  - `TurretScript.Update`: kiểm `target == null || !target.gameObject.activeInHierarchy` → drop target chết + `FindTarget` lại (FindTarget chỉ thấy địch active).
+  - `Bullet.FixedUpdate`: kiểm `activeInHierarchy`; khi mục tiêu chết giữa đường → bay nốt tới `lastTargetPos` (điểm va chạm dự kiến) rồi `Release` (biến mất), không bám Transform đóng băng.
+- **Thêm theo yêu cầu:** tháp chỉ bắn khi đã quay đúng hướng mục tiêu (`IsAimedAtTarget`, ngưỡng `aimToleranceDeg`=8°); đạn biến mất tại đúng vị trí lẽ ra va chạm khi địch chết trước.
+- **Kiểm thử (play-mode):** đạn homing đúng; khi mục tiêu `SetActive(false)`, velocity đạn chuyển về hướng điểm va chạm (5,0→40); tại điểm va chạm `FixedUpdate` → đạn `active=false` (trả pool). (Position không tiến giữa các lệnh MCP do editor không step khi mất focus — không phải lỗi code.)
+
 ### 2026-06-10 — Sửa cụm bug (BUG-01, 03, 04, 05, 06) — ĐÃ SỬA
 - **BUG-01:** Thêm cờ `earlyCallPending` — chỉ cho gọi wave sớm **1 lần** tới khi batch hiện tại kết thúc (`StartWave`/`EndWave` reset cờ). Hết stack wave vô hạn.
 - **BUG-03:** `EnemySpawner.Awake` `RemoveListener` trước `AddListener` + thêm `OnDestroy` gỡ listener → event tĩnh không cộng dồn (quan trọng khi đã có pooling).

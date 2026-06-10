@@ -12,6 +12,7 @@ public class TurretScript : MonoBehaviour
     [SerializeField] private float targetingRange = 5f;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float bps = 1f; //BulletPerSecond
+    [SerializeField] private float aimToleranceDeg = 8f;   // chỉ bắn khi lệch hướng <= ngưỡng này
 
     [Header("Tower Info")]
     [SerializeField] private TowerType towerType = TowerType.Single;
@@ -63,8 +64,11 @@ public class TurretScript : MonoBehaviour
             if (boostTimer <= 0f) fireRateMultiplier = 1f;
         }
 
-        if (target == null)
+        // Mục tiêu null HOẶC đã chết: pooling chỉ SetActive(false) nên Transform vẫn còn
+        // (target != null), phải kiểm tra activeInHierarchy mới biết địch còn sống.
+        if (target == null || !target.gameObject.activeInHierarchy)
         {
+            target = null;
             FindTarget();
             return;
         }
@@ -74,17 +78,25 @@ public class TurretScript : MonoBehaviour
         if (!CheckTargetIsInRange())
         {
             target = null;
+            return;
         }
-        else
-        {
-            timeUntilFire += Time.deltaTime;
 
-            if (timeUntilFire >= 1f / (bps * fireRateMultiplier))
-            {
-                Shoot();
-                timeUntilFire = 0f;
-            }
+        timeUntilFire += Time.deltaTime;
+        // Chỉ bắn khi đã hồi đủ nhịp VÀ tháp đã quay đúng hướng mục tiêu.
+        if (timeUntilFire >= 1f / (bps * fireRateMultiplier) && IsAimedAtTarget())
+        {
+            Shoot();
+            timeUntilFire = 0f;
         }
+    }
+
+    private bool IsAimedAtTarget()
+    {
+        if (turretRotationPoint == null || target == null) return true;
+        float targetAngle = Mathf.Atan2(target.position.y - transform.position.y,
+                                        target.position.x - transform.position.x) * Mathf.Rad2Deg - 90f;
+        float delta = Mathf.DeltaAngle(turretRotationPoint.eulerAngles.z, targetAngle);
+        return Mathf.Abs(delta) <= aimToleranceDeg;
     }
 
     private void Shoot()
