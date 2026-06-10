@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using UnityEditor;   // SerializedObject (test EditMode là editor-only nên dùng được)
 
 // Kiểm thử luồng NGOẠI LỆ các use case (phục vụ Chương 5).
 // EditMode: không gọi Awake; gán Level_Manager.main + currency trực tiếp.
