@@ -108,6 +108,12 @@ Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch*
 
 **Bug cũ còn mở (commit merge KHÔNG sửa):** BUG-01 (cổng 80%), BUG-03 (`onEnemyDestroy` static + AddListener trong Awake), BUG-04/05/06.
 
+### 2026-06-10 — Hoàn thiện các hạng mục còn lại (levels / settings / tests)
+- **Nhiều màn + mở khóa (UC3):** thêm Level_02 (12 wave), Level_03 (15 wave), nối `nextLevel` 01→02→03; `LevelSelectView` khóa nút màn chưa mở, mở khóa khi thắng màn trước. Play-test: ban đầu chỉ Màn 1 mở, thắng L1 → Màn 2 mở.
+- **Settings (UC2):** thêm 3 TMP_Dropdown (chất lượng/ngôn ngữ/hiển thị) vào panel Settings + wire SettingsView. Play-test nút Save → `saveSettings` → `Apply` (AudioListener.volume, QualitySettings, Screen mode) đúng.
+- **Test Chương 5:** thêm `UseCaseExceptionTests.cs` — UC6 từ chối khi max cấp, UC9 từ chối khi hồi chiêu / thiếu tiền, `unlockNext` mở khóa + lưu. Kiểm động **9/9 PASS**.
+- **0 lỗi** trong tất cả phiên test.
+
 ### 2026-06-10 — Sửa cụm bug (BUG-01, 03, 04, 05, 06) — ĐÃ SỬA
 - **BUG-01:** Thêm cờ `earlyCallPending` — chỉ cho gọi wave sớm **1 lần** tới khi batch hiện tại kết thúc (`StartWave`/`EndWave` reset cờ). Hết stack wave vô hạn.
 - **BUG-03:** `EnemySpawner.Awake` `RemoveListener` trước `AddListener` + thêm `OnDestroy` gỡ listener → event tĩnh không cộng dồn (quan trọng khi đã có pooling).
