@@ -12,7 +12,8 @@ public class GameplayView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
 
     [Header("Base HP")]
-    [SerializeField] private Slider baseHpSlider;
+    [SerializeField] private TextMeshProUGUI hpText;       // máu hiển thị bằng số
+    [SerializeField] private Slider baseHpSlider;          // tuỳ chọn (giữ null-guard)
 
     [Header("Buttons")]
     [SerializeField] private Button callNextWaveButton;   // UC8
@@ -42,6 +43,9 @@ public class GameplayView : MonoBehaviour
             }
             if (scoreText != null) scoreText.text = "Điểm: " + gs.Score;
         }
+
+        if (hpText != null && Base.main != null)
+            hpText.text = "Máu: " + Base.main.CurrentHP + "/" + Base.main.MaxHP;
 
         if (baseHpSlider != null && Base.main != null)
         {
