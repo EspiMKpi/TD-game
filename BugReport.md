@@ -86,3 +86,24 @@ Kiểm động qua MCP + test chính thức (`Assets/Tests/EditMode/SaveTests.cs
 - Tích hợp play-mode: chọn Level_01 (res=150, baseHP=25) → vào gameplay → **currency=150, Base.MaxHP=25** (ApplyLevel ghi đè default 100/20 nhờ `[DefaultExecutionOrder(100)]`).
 - Thắng (đầy máu) → **stars=3**, `saveResult` lưu bestScore/bestStars đọc lại đúng.
 - Console: **0 error / 0 warning**. (Đã dọn save data test `lvl_1`.)
+
+### 2026-06-10 — Kiểm thử commit merge `8d99f7c` (pooling/PowerUp/TowerAction/settings — GĐ8)
+Sau khi merge `origin/main`. Kiểm động qua MCP. **Code game compile sạch** (`Quantall.Runtime.dll`).
+
+**Blocker môi trường (không phải code game):** package `com.ivanmurzak.unity.mcp@0.79.1` (tooling MCP của teammate, thêm vào `manifest.json` khi merge) thiếu DLL NuGet (`ReflectorNet`…) vì `Assets/Plugins/` không có trên máy này → **20 lỗi compile chặn play mode**. Đã tạm gỡ package khỏi `manifest.json` (local, không commit) để test, sau đó revert. **Cần restore package** (restart Unity để resolver tải DLL, hoặc lấy `Assets/Plugins` từ teammate) để dùng lại tooling đó.
+
+**Kết quả (tất cả PASS):**
+- Pooling: `SimplePool.Get/Release` tái dùng đúng instance; `Health`/`EnemyMovement` reset trạng thái qua `OnEnable` khi lấy lại từ pool (xác minh trong **play mode**; edit-mode không chạy OnEnable nên bỏ qua).
+- `ApplyDifficulty`: máu/sát thương nhân theo độ khó dựa trên giá trị **gốc** (không cộng dồn).
+- `EnemySpawner` config-driven: `PlannedEnemiesForWave` dùng `Wave.enemyCount` nếu có, nếu không theo công thức scaling; `SetLevel` đặt totalWaves.
+- Scene đổi tên `Gameplay.unity`: build settings (Boot/MainMenu/Gameplay = 0/1/2) + `LevelDetailView.gameplaySceneName="Gameplay"` đúng; `GameFlow.Load("Gameplay")` chuyển scene OK.
+- `ApplyLevel` post-merge: chọn Level_01 → gameplay **currency=150, Base.MaxHP=25** (session sạch).
+- Managers init, lose-condition (`Base`→`Lost`) còn nguyên; `TowerActionView` & `PowerUpView` có trong scene; `TowerActionView.Show` chạy OK.
+- Console runtime: **0 error**.
+
+**Ghi nhận (INFO, chưa phải bug):**
+- `GameSession.powerUps` rỗng → các slot `PowerUpView` ẩn → **power-up chưa dùng được trong game** cho tới khi tạo asset `PowerUp` (Portal/Airstrike/SpeedBoost) + gán vào `GameSession.powerUps`.
+- `LevelDetailView.gameplaySceneName` default trong code vẫn là `"0 (1)"` (scene không còn tồn tại); chỉ giá trị serialized trong scene là `"Gameplay"`. Nên sửa default thành `"Gameplay"` để an toàn.
+- Khi ván kết thúc, `ResultView` đặt `Time.timeScale=0`; chỉ reset về 1 khi bấm Restart/Menu. Bình thường OK, nhưng nếu thoát ván bằng đường khác cần đảm bảo reset timeScale.
+
+**Bug cũ còn mở (commit merge KHÔNG sửa):** BUG-01 (cổng 80%), BUG-03 (`onEnemyDestroy` static + AddListener trong Awake), BUG-04/05/06.
