@@ -19,6 +19,14 @@ public class EnemyMovement : MonoBehaviour
     private int baseDamageToBase = -1;   // sát thương gốc (cache) cho cân bằng độ khó
     public int DamageToBase => damageToBase;
 
+    [Header("Swarm")]
+    [Tooltip("Bán kính tản ra quanh đường đi để di chuyển như bầy (0 = đi thẳng hàng như cũ).")]
+    [SerializeField] private float swarmSpread = 0.5f;
+    private Vector2 laneOffset = Vector2.zero;   // độ lệch riêng của mỗi địch so với waypoint
+
+    // Điểm nhắm thực tế = waypoint hiện tại cộng độ lệch bầy.
+    private Vector2 AimPoint => (Vector2)target.position + laneOffset;
+
     private void Awake()
     {
         if (baseDamageToBase < 0) baseDamageToBase = damageToBase;
@@ -30,6 +38,7 @@ public class EnemyMovement : MonoBehaviour
         pathIndex = 0;
         slowMultiplier = 1f;
         slowTimer = 0f;
+        laneOffset = Random.insideUnitCircle * swarmSpread;   // độ lệch bầy mới mỗi lần lấy từ pool
         if (Level_Manager.main != null && Level_Manager.main.path != null && Level_Manager.main.path.Length > 0)
             target = Level_Manager.main.path[0];
     }
@@ -81,7 +90,8 @@ public class EnemyMovement : MonoBehaviour
         // BUG-06: null-guard cho target/path (tránh NRE nếu chưa khởi tạo đường đi).
         if (target == null || Level_Manager.main == null || Level_Manager.main.path == null) return;
 
-        if (Vector2.Distance(target.position, transform.position) <= 0.1f)
+        // So với điểm nhắm có độ lệch bầy để waypoint cuối vẫn kích hoạt tấn công căn cứ.
+        if (Vector2.Distance(AimPoint, transform.position) <= 0.1f)
         {
             pathIndex++;
 
@@ -107,7 +117,7 @@ public class EnemyMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (target == null) return;   // BUG-06
-        Vector2 direction = (target.position - transform.position). normalized;
+        Vector2 direction = (AimPoint - (Vector2)transform.position).normalized;
 
         rb.linearVelocity = direction * moveSpeed * slowMultiplier;
     }
