@@ -1995,6 +1995,7 @@ GameObject:
   - component: {fileID: 598041627}
   - component: {fileID: 598041626}
   - component: {fileID: 598041630}
+  - component: {fileID: 598041631}
   m_Layer: 0
   m_Name: ExitButton
   m_TagString: Untagged
@@ -2124,6 +2125,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &598041631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598041625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b9a3f2c68338e40b3c0a3dac053053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantall.Runtime::UIButtonHover
+  hoverScale: 1.06
+  speed: 12
 --- !u!1 &623481880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2735,6 +2750,8 @@ GameObject:
   - component: {fileID: 675678038}
   - component: {fileID: 675678040}
   - component: {fileID: 675678039}
+  - component: {fileID: 675678042}
+  - component: {fileID: 675678041}
   m_Layer: 0
   m_Name: MainButtons
   m_TagString: Untagged
@@ -2804,6 +2821,35 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &675678041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675678037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12dd24cb2efd114e82be321a2240e47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantall.Runtime::UIEntrance
+  duration: 0.25
+  delay: 0
+  fade: 1
+  slideFrom: {x: 0, y: -40}
+  scaleFrom: 0.94
+--- !u!225 &675678042
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675678037}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &690113446
 GameObject:
   m_ObjectHideFlags: 0
@@ -2817,6 +2863,7 @@ GameObject:
   - component: {fileID: 690113448}
   - component: {fileID: 690113447}
   - component: {fileID: 690113451}
+  - component: {fileID: 690113452}
   m_Layer: 0
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -2946,6 +2993,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &690113452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690113446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b9a3f2c68338e40b3c0a3dac053053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantall.Runtime::UIButtonHover
+  hoverScale: 1.06
+  speed: 12
 --- !u!1 &734437003
 GameObject:
   m_ObjectHideFlags: 0
@@ -6108,6 +6169,7 @@ GameObject:
   - component: {fileID: 1274956933}
   - component: {fileID: 1274956932}
   - component: {fileID: 1274956936}
+  - component: {fileID: 1274956937}
   m_Layer: 0
   m_Name: PlayButton
   m_TagString: Untagged
@@ -6237,6 +6299,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1274956937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274956931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b9a3f2c68338e40b3c0a3dac053053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantall.Runtime::UIButtonHover
+  hoverScale: 1.06
+  speed: 12
 --- !u!1 &1302737232
 GameObject:
   m_ObjectHideFlags: 0
@@ -7362,6 +7438,8 @@ GameObject:
   - component: {fileID: 1460203143}
   - component: {fileID: 1460203145}
   - component: {fileID: 1460203144}
+  - component: {fileID: 1460203147}
+  - component: {fileID: 1460203146}
   m_Layer: 0
   m_Name: Title
   m_TagString: Untagged
@@ -7488,6 +7566,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460203142}
   m_CullTransparentMesh: 1
+--- !u!114 &1460203146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460203142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12dd24cb2efd114e82be321a2240e47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantall.Runtime::UIEntrance
+  duration: 0.25
+  delay: 0
+  fade: 1
+  slideFrom: {x: 0, y: -40}
+  scaleFrom: 0.94
+--- !u!225 &1460203147
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460203142}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1465574285
 GameObject:
   m_ObjectHideFlags: 0
