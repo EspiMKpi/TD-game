@@ -172,6 +172,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   rb: {fileID: 8577739575134325724}
   moveSpeed: 2
+  damageToBase: 1
+  swarmSpread: 0.5
 --- !u!114 &-8743940540675556290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 358fd061f7e1059488aca10dc93a5750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  hitPoints: 2
+  currencyWorth: 10
+  deathEffectPrefab: {fileID: 6776426981310709882, guid: 8873f4f41e3727d4a9adfb9ee984de96, type: 3}
+  deathEffectLifetime: 2

@@ -6,6 +6,10 @@ public class Health : MonoBehaviour
     [SerializeField] private int hitPoints = 2;
     [SerializeField] private int currencyWorth = 10;
 
+    [Header("VFX (placeholder — gắn prefab hiệu ứng chết thật vào đây sau)")]
+    [SerializeField] private GameObject deathEffectPrefab;   // để trống = không có hiệu ứng, game chạy như cũ
+    [SerializeField] private float deathEffectLifetime = 2f;
+
     private bool isDestroyed = false;
     private int maxHitPoints = -1;   // máu gốc (cache) cho cân bằng độ khó & tái dùng pool
 
@@ -41,7 +45,16 @@ public class Health : MonoBehaviour
             Level_Manager.main.IncreaseCurrency(currencyWorth);
             if (GameSession.Instance != null) GameSession.Instance.AddScore(currencyWorth);
             isDestroyed = true;
+            SpawnDeathEffect();
             SimplePool.Release(gameObject);   // Giai đoạn 8: trả về pool thay vì Destroy
         }
+    }
+
+    // VFX: sinh hiệu ứng chết (nếu có gắn prefab) rồi tự hủy sau deathEffectLifetime.
+    private void SpawnDeathEffect()
+    {
+        if (deathEffectPrefab == null) return;
+        GameObject fx = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        if (deathEffectLifetime > 0f) Destroy(fx, deathEffectLifetime);
     }
 }

@@ -25,6 +25,7 @@ public class GameSession : MonoBehaviour
     public List<PowerUp> powerUps = new List<PowerUp>();   // kết tập 1-n
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private LayerMask towerMask;
+    [SerializeField] private float powerUpEffectLifetime = 2f;   // VFX placeholder: thời gian sống của hiệu ứng kỹ năng
 
     [Header("Run state")]
     [SerializeField] private int currentWaveIndex;
@@ -180,6 +181,7 @@ public class GameSession : MonoBehaviour
 
         SpendResources(powerUp.resourceCost);
         powerUp.activate(targetPosition);
+        SpawnPowerUpEffect(powerUp, targetPosition);
 
         switch (powerUp.type)
         {
@@ -188,6 +190,14 @@ public class GameSession : MonoBehaviour
             case PowerUpType.SpeedBoost: ApplySpeedBoost(powerUp, targetPosition); break;
         }
         return true;
+    }
+
+    // VFX: sinh hiệu ứng kỹ năng tại điểm nhắm (nếu PowerUp có gắn prefab) rồi tự hủy.
+    private void SpawnPowerUpEffect(PowerUp powerUp, Vector3 pos)
+    {
+        if (powerUp.effectPrefab == null) return;
+        GameObject fx = Instantiate(powerUp.effectPrefab, pos, Quaternion.identity);
+        if (powerUpEffectLifetime > 0f) Destroy(fx, powerUpEffectLifetime);
     }
 
     // Portal — đẩy lùi địch trong bán kính trên đường đi (điểm nhấn Quantall).
