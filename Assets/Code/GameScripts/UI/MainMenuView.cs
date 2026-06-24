@@ -21,8 +21,13 @@ public class MainMenuView : MonoBehaviour
         if (exitButton != null) exitButton.onClick.AddListener(() => Toggle(confirmExitPanel));
     }
 
+    // Mở 1 panel và ẩn các panel anh em còn lại (tránh chồng panel).
     private void Toggle(GameObject panel)
     {
-        if (panel != null) panel.SetActive(true);
+        if (panel == null) return;
+        if (levelSelectPanel != null && levelSelectPanel != panel) levelSelectPanel.SetActive(false);
+        if (settingsPanel != null && settingsPanel != panel) settingsPanel.SetActive(false);
+        if (confirmExitPanel != null && confirmExitPanel != panel) confirmExitPanel.SetActive(false);
+        panel.SetActive(true);
     }
 }
