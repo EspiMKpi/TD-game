@@ -13,71 +13,46 @@ MonoBehaviour:
   m_Name: Level_02
   m_EditorClassIdentifier: Quantall.Runtime::Level
   levelId: 2
-  waveCount: 12
-  initialResources: 140
-  baseMaxHP: 22
-  isUnlocked: 0
+  waveCount: 7
+  initialResources: 175
+  baseMaxHP: 25
+  isUnlocked: 1
   bestScore: 0
   bestStars: 0
   nextLevel: {fileID: 11400000, guid: 8c568b1d29486e642b5a141e8050530f, type: 2}
   waves:
   - waveIndex: 1
-    enemyCount: 6
-    spawnRate: 0.6
-    difficultyMultiplier: 1.2
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 2
-    enemyCount: 8
-    spawnRate: 0.6
-    difficultyMultiplier: 1.3
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 3
     enemyCount: 10
-    spawnRate: 0.7
-    difficultyMultiplier: 1.4
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 4
-    enemyCount: 12
-    spawnRate: 0.7
-    difficultyMultiplier: 1.5
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 5
-    enemyCount: 14
-    spawnRate: 0.8
-    difficultyMultiplier: 1.6
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 6
+    spawnRate: 1.5
+    difficultyMultiplier: 1
+    enemyPrefab: {fileID: 8322373915105625208, guid: 80e639d7ee7653c46ae98ea1ee24188b, type: 3}
+  - waveIndex: 2
     enemyCount: 16
-    spawnRate: 0.8
-    difficultyMultiplier: 1.8
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 7
-    enemyCount: 18
+    spawnRate: 3.5
+    difficultyMultiplier: 1
+    enemyPrefab: {fileID: 7954745407958266305, guid: e51ef6b8751b38f4281011d753237686, type: 3}
+  - waveIndex: 3
+    enemyCount: 6
+    spawnRate: 1.2
+    difficultyMultiplier: 1
+    enemyPrefab: {fileID: 561951739888582217, guid: 0bb344c060815fa4fb79ba1537cb1d6b, type: 3}
+  - waveIndex: 4
+    enemyCount: 6
     spawnRate: 0.9
-    difficultyMultiplier: 2
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 8
-    enemyCount: 20
-    spawnRate: 0.9
-    difficultyMultiplier: 2.2
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 9
+    difficultyMultiplier: 1.1
+    enemyPrefab: {fileID: 4885389672750520654, guid: 931bf4ce0ae8796498e2b8354058a677, type: 3}
+  - waveIndex: 5
     enemyCount: 22
+    spawnRate: 4
+    difficultyMultiplier: 1.1
+    enemyPrefab: {fileID: 7954745407958266305, guid: e51ef6b8751b38f4281011d753237686, type: 3}
+  - waveIndex: 6
+    enemyCount: 8
+    spawnRate: 1.3
+    difficultyMultiplier: 1.1
+    enemyPrefab: {fileID: 561951739888582217, guid: 0bb344c060815fa4fb79ba1537cb1d6b, type: 3}
+  - waveIndex: 7
+    enemyCount: 10
     spawnRate: 1
-    difficultyMultiplier: 2.4
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 10
-    enemyCount: 24
-    spawnRate: 1
-    difficultyMultiplier: 2.6
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 11
-    enemyCount: 27
-    spawnRate: 1.1
-    difficultyMultiplier: 2.8
-    enemyPrefab: {fileID: 0}
-  - waveIndex: 12
-    enemyCount: 30
-    spawnRate: 1.1
-    difficultyMultiplier: 3
-    enemyPrefab: {fileID: 0}
+    difficultyMultiplier: 1.4
+    enemyPrefab: {fileID: 4885389672750520654, guid: 931bf4ce0ae8796498e2b8354058a677, type: 3}
