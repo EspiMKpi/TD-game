@@ -17,6 +17,7 @@ public class TowerActionView : MonoBehaviour
 
     private TurretScript current;
     private Plot currentPlot;
+    private int openedFrame = -1;   // bỏ qua cú click vừa mở popup (tránh tự đóng ngay)
 
     private void Awake()
     {
@@ -42,7 +43,22 @@ public class TowerActionView : MonoBehaviour
             panel.SetActive(true);
             PositionNextTo(tower.transform.position);
         }
+        openedFrame = Time.frameCount;
         Refresh();
+    }
+
+    // Click ra ngoài popup -> đóng (bỏ qua chính cú click vừa mở).
+    private void Update()
+    {
+        if (panel == null || !panel.activeSelf) return;
+        if (Time.frameCount == openedFrame) return;
+        if (!Input.GetMouseButtonDown(0)) return;
+
+        var rt = panel.transform as RectTransform;
+        var canvas = rt != null ? rt.GetComponentInParent<Canvas>() : null;
+        Camera uiCam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+        if (rt != null && !RectTransformUtility.RectangleContainsScreenPoint(rt, Input.mousePosition, uiCam))
+            Hide();
     }
 
     // Đặt popup cạnh tháp (đổi toạ độ world -> điểm trên canvas), nghiêng về giữa màn
