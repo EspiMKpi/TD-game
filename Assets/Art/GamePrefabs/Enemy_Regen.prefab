@@ -173,7 +173,7 @@ MonoBehaviour:
   rb: {fileID: 3060200983236966470}
   moveSpeed: 1.6
   damageToBase: 1
-  swarmSpread: 0.3
+  swarmSpread: 0.22
 --- !u!114 &8132874921871156355
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -173,7 +173,7 @@ MonoBehaviour:
   rb: {fileID: 8843621617357357587}
   moveSpeed: 4
   damageToBase: 1
-  swarmSpread: 0.6
+  swarmSpread: 0.3
 --- !u!114 &1936530134156179838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,3 +190,4 @@ MonoBehaviour:
   currencyWorth: 5
   deathEffectPrefab: {fileID: 6776426981310709882, guid: 8873f4f41e3727d4a9adfb9ee984de96, type: 3}
   deathEffectLifetime: 2
+  regenPerSecond: 0
