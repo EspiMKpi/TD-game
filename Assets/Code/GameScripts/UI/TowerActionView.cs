@@ -37,8 +37,40 @@ public class TowerActionView : MonoBehaviour
         if (tower == null) return;
         current = tower;
         currentPlot = plot;
-        if (panel != null) panel.SetActive(true);
+        if (panel != null)
+        {
+            panel.SetActive(true);
+            PositionNextTo(tower.transform.position);
+        }
         Refresh();
+    }
+
+    // Đặt popup cạnh tháp (đổi toạ độ world -> điểm trên canvas), nghiêng về giữa màn
+    // hình để không che tháp và luôn nằm trong khung hình.
+    private void PositionNextTo(Vector3 worldPos)
+    {
+        var rt = panel.transform as RectTransform;
+        if (rt == null) return;
+        var canvas = rt.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        var canvasRect = canvas.transform as RectTransform;
+
+        Camera cam = Camera.main;
+        Vector2 screen = cam != null ? (Vector2)cam.WorldToScreenPoint(worldPos) : (Vector2)worldPos;
+        Camera uiCam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screen, uiCam, out Vector2 local))
+            return;
+
+        float dir = local.x > 0f ? -1f : 1f;                 // đẩy về phía giữa
+        local.x += dir * (rt.rect.width * 0.5f + 40f);
+
+        Vector2 half = canvasRect.rect.size * 0.5f;          // kẹp trong canvas
+        Vector2 pHalf = rt.rect.size * 0.5f;
+        local.x = Mathf.Clamp(local.x, -half.x + pHalf.x, half.x - pHalf.x);
+        local.y = Mathf.Clamp(local.y, -half.y + pHalf.y, half.y - pHalf.y);
+
+        rt.anchoredPosition = local;
     }
 
     public void Hide()
