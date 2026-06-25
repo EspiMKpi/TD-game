@@ -15,6 +15,10 @@ public class PowerUpView : MonoBehaviour
     [SerializeField] private Text[] slotLabels;              // tùy chọn (UI.Text, khớp nút HUD legacy)
     [SerializeField] private Camera worldCamera;             // mặc định Camera.main
 
+    [Header("Cooldown (song song với slotButtons)")]
+    [SerializeField] private Image[] slotCooldowns;          // lớp phủ fill tròn khi hồi chiêu
+    [SerializeField] private Text[] slotCooldownLabels;      // số giây còn lại
+
     [Header("Range indicator")]
     [SerializeField] private SpriteRenderer rangeIndicator;  // vòng tròn trong suốt (world-space)
     [SerializeField] private float baseAlpha = 0.5f;
@@ -67,8 +71,35 @@ public class PowerUpView : MonoBehaviour
         armedIndex = index;
     }
 
+    // Cập nhật chỉ báo hồi chiêu mỗi slot: fill tròn cạn dần + số giây; khóa nút khi đang hồi.
+    private void UpdateCooldowns()
+    {
+        var gs = GameSession.Instance;
+        if (slotButtons == null || gs == null || gs.powerUps == null) return;
+        for (int i = 0; i < slotButtons.Length; i++)
+        {
+            if (i >= gs.powerUps.Count || gs.powerUps[i] == null) continue;
+            PowerUp pu = gs.powerUps[i];
+            float prog = pu.CooldownProgress01;   // 1 = vừa dùng, 0 = sẵn sàng
+            bool onCd = prog > 0f;
+
+            if (slotCooldowns != null && i < slotCooldowns.Length && slotCooldowns[i] != null)
+            {
+                if (slotCooldowns[i].gameObject.activeSelf != onCd) slotCooldowns[i].gameObject.SetActive(onCd);
+                slotCooldowns[i].fillAmount = prog;
+            }
+            if (slotCooldownLabels != null && i < slotCooldownLabels.Length && slotCooldownLabels[i] != null && onCd)
+                slotCooldownLabels[i].text = Mathf.CeilToInt(pu.CooldownRemaining).ToString();
+
+            if (slotButtons[i] != null && slotButtons[i].interactable == onCd)
+                slotButtons[i].interactable = !onCd;   // khóa khi đang hồi chiêu
+        }
+    }
+
     private void Update()
     {
+        UpdateCooldowns();
+
         if (armedIndex >= 0)
         {
             ShowPreviewAtCursor();   // vòng tròn tầm bám con trỏ

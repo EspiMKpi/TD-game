@@ -25,6 +25,10 @@ public class PowerUp : ScriptableObject
 
     public bool IsReady() => Time.time - lastUsedTime >= cooldown;
 
+    // UI hồi chiêu: thời gian còn lại (giây) và tiến trình 0..1 (1 = vừa dùng, 0 = sẵn sàng).
+    public float CooldownRemaining => Mathf.Max(0f, cooldown - (Time.time - lastUsedTime));
+    public float CooldownProgress01 => cooldown <= 0f ? 0f : Mathf.Clamp01(CooldownRemaining / cooldown);
+
     // Giữ tên 'activate' theo thiết kế; tại đây chỉ ghi nhận thời điểm dùng (cooldown).
     // GameSession.activatePowerUp thực thi hiệu ứng theo 'type'.
     public void activate(Vector3 targetPosition)
