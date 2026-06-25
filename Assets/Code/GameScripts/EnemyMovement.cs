@@ -20,12 +20,24 @@ public class EnemyMovement : MonoBehaviour
     public int DamageToBase => damageToBase;
 
     [Header("Swarm")]
-    [Tooltip("Bán kính tản ra quanh đường đi để di chuyển như bầy (0 = đi thẳng hàng như cũ).")]
+    [Tooltip("Độ tản ngang tối đa hai bên đường đi để di chuyển như bầy (0 = đi thẳng hàng như cũ).")]
     [SerializeField] private float swarmSpread = 0.5f;
-    private Vector2 laneOffset = Vector2.zero;   // độ lệch riêng của mỗi địch so với waypoint
+    private float laneAmount = 0f;                // độ lệch ngang có dấu, riêng mỗi địch (|.| <= swarmSpread)
+    private Vector2 laneOffset = Vector2.zero;    // độ lệch vuông góc với đoạn đường hiện tại
 
-    // Điểm nhắm thực tế = waypoint hiện tại cộng độ lệch bầy.
+    // Điểm nhắm thực tế = waypoint hiện tại cộng độ lệch ngang (vuông góc hướng đi).
     private Vector2 AimPoint => (Vector2)target.position + laneOffset;
+
+    // Tính lại độ lệch sao cho LUÔN vuông góc với đoạn đường hiện tại -> bầy tản ngang
+    // theo bề rộng đường, không lấn sang ô đặt tháp (Plot) khi đường rẽ.
+    private void RecomputeLaneOffset()
+    {
+        if (target == null) { laneOffset = Vector2.zero; return; }
+        Vector2 dir = (Vector2)target.position - (Vector2)transform.position;
+        if (dir.sqrMagnitude < 0.0001f) { laneOffset = Vector2.zero; return; }
+        dir.Normalize();
+        laneOffset = new Vector2(-dir.y, dir.x) * laneAmount;   // pháp tuyến * biên độ
+    }
 
     private void Awake()
     {
@@ -38,9 +50,10 @@ public class EnemyMovement : MonoBehaviour
         pathIndex = 0;
         slowMultiplier = 1f;
         slowTimer = 0f;
-        laneOffset = Random.insideUnitCircle * swarmSpread;   // độ lệch bầy mới mỗi lần lấy từ pool
+        laneAmount = Random.Range(-swarmSpread, swarmSpread);   // biên độ lệch ngang mới mỗi lần lấy từ pool
         if (Level_Manager.main != null && Level_Manager.main.path != null && Level_Manager.main.path.Length > 0)
             target = Level_Manager.main.path[0];
+        RecomputeLaneOffset();
     }
 
     // Giai đoạn 8: nhân sát thương lên căn cứ theo độ khó (dựa trên giá trị gốc).
@@ -68,6 +81,7 @@ public class EnemyMovement : MonoBehaviour
             && pathIndex < Level_Manager.main.path.Length)
         {
             target = Level_Manager.main.path[pathIndex];
+            RecomputeLaneOffset();
         }
     }
 
@@ -77,6 +91,7 @@ public class EnemyMovement : MonoBehaviour
         if (Level_Manager.main != null && Level_Manager.main.path != null
             && pathIndex < Level_Manager.main.path.Length)
             target = Level_Manager.main.path[pathIndex];
+        RecomputeLaneOffset();
     }
 
     private void Update()
@@ -110,6 +125,7 @@ public class EnemyMovement : MonoBehaviour
             else
             {
                 target = Level_Manager.main.path[pathIndex];
+                RecomputeLaneOffset();
             }
         }
     }
